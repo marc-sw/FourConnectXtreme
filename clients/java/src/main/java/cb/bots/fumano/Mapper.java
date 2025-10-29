@@ -20,12 +20,12 @@ public class Mapper {
             }
         }
         connect4Xtreme.setRound(playState.getRound() - 1);
-        if (playState.getBombs().isEmpty()) {
-            connect4Xtreme.setBomb(null);
-        } else {
+         if (!playState.getBombs().isEmpty()) {
             Map<String, Integer> bombMap = playState.getBombs().getFirst();
-            Bomb bomb = new Bomb(bombMap.get("row"), bombMap.get("col"), bombMap.get("explode_in_round") - 1);
-            connect4Xtreme.setBomb(bomb);
+            int row = bombMap.get("row");
+            int column = bombMap.get("col");
+            int explodeRound = bombMap.get("explode_in_round") - 1;
+            connect4Xtreme.set(row, column, (byte) (explodeRound - connect4Xtreme.getRound()));
         }
         connect4Xtreme.setState(connect4Xtreme.calcState());
         return connect4Xtreme;

@@ -20,21 +20,19 @@ public class Connect4Xtreme implements State {
     private byte state;
     private final byte[] tiles;
     private int round;
-    private Bomb bomb;
 
-    public Connect4Xtreme(byte[] tiles, int round, byte state, Bomb bomb) {
+    public Connect4Xtreme(byte[] tiles, int round, byte state) {
         this.tiles = tiles;
         this.round = round;
         this.state = state;
-        this.bomb = bomb;
     }
 
     public Connect4Xtreme(Connect4Xtreme original) {
-        this(Arrays.copyOf(original.tiles, original.tiles.length), original.round, original.state, original.bomb);
+        this(Arrays.copyOf(original.tiles, original.tiles.length), original.round, original.state);
     }
 
     public Connect4Xtreme() {
-        this(new byte[ROWS * COLUMNS], 0, None, null);
+        this(new byte[ROWS * COLUMNS], 0, None);
     }
 
     public byte get(int row, int column) {
@@ -45,20 +43,16 @@ public class Connect4Xtreme implements State {
         tiles[row * COLUMNS + column] = value;
     }
 
+    public int getRound() {
+        return round;
+    }
+
     public void setRound(int round) {
         this.round = round;
     }
 
     public void setState(byte state) {
         this.state = state;
-    }
-
-    public Bomb getBomb() {
-        return bomb;
-    }
-
-    public void setBomb(Bomb bomb) {
-        this.bomb = bomb;
     }
 
     private byte currentCoin() {
@@ -150,24 +144,23 @@ public class Connect4Xtreme implements State {
     }
 
 
-    private void explodeBomb() {
-        set(bomb.row(), bomb.column(), None);
+    private void explodeBomb(int row, int column) {
+        set(row, column, None);
         for (int[] dir: DIRS) {
             int dx = dir[0];
             int dy = dir[1];
 
-            int x = bomb.column() + dx;
-            int y = bomb.row() + dy;
+            int x = column + dx;
+            int y = row + dy;
             if (x < 0 || x >= COLUMNS || y < 0 || y >= ROWS) {
                 continue;
             }
-            set(y, x, None);
             if (dy == -1) {
                 continue;
             }
             int offset = 1;
             if (dy == 1) {
-                if (bomb.row() == 0) {
+                if (row == 0) {
                     offset = 2;
                 } else {
                     offset = 3;
@@ -188,8 +181,7 @@ public class Connect4Xtreme implements State {
         while (get(row, column) != None) {
             row++;
         }
-        set(row, column, (byte) 99);
-        bomb = new Bomb(row, column, round + 4);
+        set(row, column, (byte) 4);
     }
 
     @Override
@@ -221,9 +213,14 @@ public class Connect4Xtreme implements State {
             row++;
         }
         set(row, action, currentCoin());
-        if (bomb != null && bomb.explodingRound() == this.round) {
-            explodeBomb();
-            bomb = null;
+        for (int i = 0; i < ROWS * COLUMNS; i++) {
+            if (tiles[i] > 0 && tiles[i] < 5) {
+                tiles[i]--;
+                if (tiles[i] == 0) {
+                    explodeBomb(i / COLUMNS, i % COLUMNS);
+                }
+                break;
+            }
         }
         this.state = calcState();
     }

@@ -59,7 +59,7 @@ public class MonteCarloTreeSearch {
         long end = start + milliSeconds;
         long delta = 0;
         while (start + delta < end) {
-            for (int i = 0; i < 8000; i++) {
+            for (int i = 0; i < 6000; i++) {
                 iterate(root);
                 count++;
             }
