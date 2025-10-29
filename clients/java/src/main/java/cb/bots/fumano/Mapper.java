@@ -19,7 +19,7 @@ public class Mapper {
                 connect4Xtreme.set(y, x, (byte) value);
             }
         }
-        connect4Xtreme.setRound(playState.getRound() - 1);
+        connect4Xtreme.setRound((byte) (playState.getRound() - 1));
          if (!playState.getBombs().isEmpty()) {
             Map<String, Integer> bombMap = playState.getBombs().getFirst();
             int row = bombMap.get("row");

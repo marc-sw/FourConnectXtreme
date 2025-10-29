@@ -17,11 +17,11 @@ public class Connect4Xtreme implements State {
     private static final int[][] DIRS = {{1, 0}, {-1, 0}, {0, -1}, {0, 1}};
     private static final StringBuilder builder = new StringBuilder();
 
-    private byte state;
     private final byte[] tiles;
-    private int round;
+    private byte state;
+    private byte round;
 
-    public Connect4Xtreme(byte[] tiles, int round, byte state) {
+    public Connect4Xtreme(byte[] tiles, byte round, byte state) {
         this.tiles = tiles;
         this.round = round;
         this.state = state;
@@ -32,7 +32,7 @@ public class Connect4Xtreme implements State {
     }
 
     public Connect4Xtreme() {
-        this(new byte[ROWS * COLUMNS], 0, None);
+        this(new byte[ROWS * COLUMNS], (byte) 0, None);
     }
 
     public byte get(int row, int column) {
@@ -47,7 +47,7 @@ public class Connect4Xtreme implements State {
         return round;
     }
 
-    public void setRound(int round) {
+    public void setRound(byte round) {
         this.round = round;
     }
 

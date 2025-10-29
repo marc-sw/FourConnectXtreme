@@ -18,12 +18,12 @@ public class FumanoBot implements BotAi {
     @Override
     public int play(PlayState playState) {
         int move = mcts.findBestAction(Mapper.loadConnect4Xtreme(playState), calcTime);
-        calcTime = 660L;
+        calcTime = 665L;
         return move;
     }
 
     @Override
     public String getName() {
-        return "MCTSxJava";
+        return "Optimized";
     }
 }
