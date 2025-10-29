@@ -32,19 +32,25 @@ public class CustomWebsocketClient extends WebSocketClient {
 
     @Override
     public void onMessage(ByteBuffer bytes) {
+        long start = System.currentTimeMillis();
         System.out.println("on message bytes");
         try {
             String decodedMessage = new String(bytes.array(), StandardCharsets.UTF_8)
                     .replace("'", "\"");
             System.out.println(decodedMessage);
             PlayState response = mapper.readValue(decodedMessage, PlayState.class);
+            System.out.printf("parsing took: %dms%n", System.currentTimeMillis() - start);
+            start = System.currentTimeMillis();
             if (response.getBot().equals(bot.getName())) {
                 Map<String, Object> responseMap = Map.of(
                         "state", "play",
                         "column", bot.play(response)
                 );
+                System.out.printf("move evalutaion took: %dms%n", System.currentTimeMillis() - start);
+                start = System.currentTimeMillis();
                 String jsonResponse = mapper.writeValueAsString(responseMap);
                 send(jsonResponse);
+                System.out.printf("sending took: %dms%n", System.currentTimeMillis() - start);
             }
         } catch (Exception e) {
             if (e instanceof JsonParseException) {
