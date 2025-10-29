@@ -18,7 +18,7 @@ public class FumanoBot implements BotAi {
     @Override
     public int play(PlayState playState) {
         int move = mcts.findBestAction(Mapper.loadConnect4Xtreme(playState), calcTime);
-        calcTime = 665L;
+        calcTime = 650L;
         return move;
     }
 
